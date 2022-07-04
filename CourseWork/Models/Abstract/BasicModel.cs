@@ -5,7 +5,7 @@ namespace CourseWork.Models.Abstract
     public abstract class BasicModel
     { 
         public ConsoleColor ConsoleColor { get; set; }
-        public abstract char SymbolForOutput { get;}
+        public abstract char SymbolForOutput { get; }
         public BasicModel(ConsoleColor consoleColor)
         {
             ConsoleColor = consoleColor;

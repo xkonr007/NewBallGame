@@ -2,8 +2,9 @@
 {
     public class Menu
     {
-        private string[] mainMenuOptions = { "Play", "About", "Exit" };
+        private string[] mainMenuOptions = { "Play", "About", "Settings", "Exit" };
         private string[] levelOptions = { "Level 1", "Level 2", "Level 3" };
+        private string[] speedOptions = { "Slow", "Medium", "Quick" };
         private string prompt;
         private int selectedIndex;
 
@@ -21,6 +22,11 @@
         public int RunLevelMenu()
         {
             return Run(levelOptions);
+        }
+
+        public int RunSpeedMenu() 
+        {
+            return Run(speedOptions);
         }
 
         private void DisplayOptions(string[] options)
@@ -64,19 +70,13 @@
                 if (keyPressed == ConsoleKey.UpArrow)
                 {
                     selectedIndex--;
-                    if (selectedIndex == -1)
-                    {
-                        selectedIndex = options.Length - 1;
-                    }
                 }
                 else if (keyPressed == ConsoleKey.DownArrow)
                 {
-                    selectedIndex++;
-                    if (selectedIndex == options.Length)
-                    {
-                        selectedIndex = 0;
-                    }
+                    selectedIndex++; 
                 }
+                selectedIndex += options.Length;
+                selectedIndex %= options.Length;
             } while (keyPressed != ConsoleKey.Enter);
 
             return selectedIndex;

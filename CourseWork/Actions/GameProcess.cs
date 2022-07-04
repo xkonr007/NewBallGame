@@ -2,6 +2,8 @@
 using CourseWork.Levels;
 using System.Diagnostics;
 using CourseWork.Models;
+using CourseWork.Controllers;
+using CourseWork.Field;
 
 namespace CourseWork.Actions
 {
@@ -10,6 +12,7 @@ namespace CourseWork.Actions
         private Stopwatch timer;
         public Level level;
         public Menu menu;
+        private int gameSpeed = 100;
         public void Start()
         {
             Console.CursorVisible = false;
@@ -41,58 +44,82 @@ namespace CourseWork.Actions
                     About();
                     break;
                 case 2:
+                    ChooseSpeed();
+                    RunMenu();
+                    break;
+                case 3:
                     Exit();
                     break;
             }
         }
 
-        private void Play()
+        private void PrepareLevel()
         {
+            level = Level.GetLevel((ChooseLevel()));
             timer = new Stopwatch();
+        }
+
+        private void PrepareField()
+        {
             Console.Clear();
             Console.CursorVisible = false;
-            level = Level.GetLevel(ChooseLevel());
-            Console.Clear();
             level.GetLevelField();
             Cursor cursor = new Cursor(new Point(3, 3));
-            level.LevelField.PrintField();
+            MainController.PrintField(level.LevelField);
             level.LevelField.cursor = cursor;
             cursor.Draw();
             timer.Start();
-            while (level.LevelField.MagicBalls > 0 && timer.Elapsed.TotalSeconds < level.LevelData.Seconds)
+        }
+
+        private void Go()
+        {
+            while (level.LevelField.MagicBalls > 0 && timer.Elapsed.TotalSeconds < level.LevelData.Seconds && level.LevelField[level.LevelField.ball.Position.X, level.LevelField.ball.Position.Y] is not DeathTrap )
             {
                 level.LevelField.MoveBall();
                 level.LevelField.ball.Draw();
-                level.LevelField.MoveCursor();
-                DrawResults(timer.Elapsed, (level.LevelData.MagicBalls-level.LevelField.MagicBalls)*5, level.LevelField.MagicBalls);
+                level.LevelField.MakeAction();
+                DrawResults(level.LevelData.Seconds - timer.Elapsed.Seconds, (level.LevelData.MagicBalls - level.LevelField.MagicBalls) * 5, level.LevelField.MagicBalls);
                 DrawInstructions();
-                Thread.Sleep(100);
+                Thread.Sleep(gameSpeed);
             }
+        }
+
+        private void Play()
+        {
+            PrepareLevel();
+            PrepareField();
+            Go();
             GetWinOrLose();
         }
 
         private int ChooseLevel()
         {
-            string prompt = @"
- _        _______             ______   _______  _        _          _______  _______  _______  _______ 
-( (    /|(  ____ \|\     /|  (  ___ \ (  ___  )( \      ( \        (  ____ \(  ___  )(       )(  ____ \
-|  \  ( || (    \/| )   ( |  | (   ) )| (   ) || (      | (        | (    \/| (   ) || () () || (    \/
-|   \ | || (__    | | _ | |  | (__/ / | (___) || |      | |        | |      | (___) || || || || (__    
-| (\ \) ||  __)   | |( )| |  |  __ (  |  ___  || |      | |        | | ____ |  ___  || |(_)| ||  __)   
-| | \   || (      | || || |  |    \ \ | (   ) || |      | |        | | \_  )| (   ) || |   | || (      
-| )  \  || (____/\| () () |  | )___) )| )   ( || (____/\| (____/\  | (___) || )   ( || )   ( || (____/\
-|/    )_)(_______/(_______)  |/ \___/ |/     \|(_______/(_______/  (_______)|/     \||/     \|(_______/                                                                                                                                                                                                         
-";
             int selectedIndex = menu.RunLevelMenu();
 
             switch (selectedIndex)
             {
                 case 0:
-                    return 1;
                 case 1:
-                    return 2;
                 default:
-                    return 3;
+                    return selectedIndex+1;
+            }
+        }
+
+        private void ChooseSpeed()
+        {
+            int selectedIndex = menu.RunSpeedMenu();
+
+            switch (selectedIndex)
+            {
+                case 0:
+                    gameSpeed = 150;
+                    return;
+                case 2:
+                    gameSpeed = 50;
+                    return;
+                default:
+                    gameSpeed = 100;
+                    return;
             }
         }
 
@@ -149,10 +176,10 @@ namespace CourseWork.Actions
             RunMenu();
         }
 
-        private void DrawResults(TimeSpan seconds, int score, int balls)
+        private void DrawResults(int seconds, int score, int balls)
         {
             Console.SetCursorPosition(2, 22);
-            Console.Write($"Timer:{seconds} Score:{score} MagicBalls:{balls}");
+            Console.Write($"Timer: {seconds} Score: {score} MagicBalls: {balls} ");
         }
 
         private void DrawInstructions()

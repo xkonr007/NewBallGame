@@ -1,5 +1,6 @@
 ﻿using System.Drawing; 
 using CourseWork.Models.Abstract;
+using CourseWork.Field;
 
 namespace CourseWork.Models
 {
@@ -9,8 +10,8 @@ namespace CourseWork.Models
 
         public Point Position { get; set; }
         public override char SymbolForOutput { get; } = 'o';
-        public int SpeedX { get; set; } = 0;
-        public int SpeedY { get; set; } = 1;
+        public int DX { get; set; } = 0;
+        public int DY { get; set; } = 1;
 
         public new void Draw()
         {
@@ -18,6 +19,13 @@ namespace CourseWork.Models
             Console.ForegroundColor = ConsoleColor;
             Console.Write(SymbolForOutput);
             Console.ResetColor();
+        }
+
+        public void Move(Point speed, BasicModel[,] field)
+        {
+            var toClear = Position;
+            Position = new Point(Position.X + speed.X, Position.Y + speed.Y);
+            field[toClear.X, toClear.Y] = new EmptyModel();
         }
     }
 }
