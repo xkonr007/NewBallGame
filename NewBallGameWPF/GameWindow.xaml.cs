@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,8 +7,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Diagnostics;
 using NewBallGameWPF.Models;
-using NewBallGameWPF.Models.Abstract;
 using NewBallGameWPF.Field;
+using NewBallGameWPF.Controller;
 
 namespace NewBallGameWPF
 {
@@ -25,7 +24,6 @@ namespace NewBallGameWPF
 
         DispatcherTimer gameTimer = new DispatcherTimer();
 
-        
         public GameWindow(int levelId)
         {
             InitializeComponent();
@@ -42,56 +40,10 @@ namespace NewBallGameWPF
         {
             var key = e.Key;
 
-            switch (key)
-            {
-                case Key.Up:
-                case Key.Down:
-                case Key.Left:
-                case Key.Right:
-                    var speed = keySpeed[key];
-                    if (level.Field.IsCoordinatesOK(level.Field.cursor.Position.X + speed.X, level.Field.cursor.Position.Y + speed.Y))
-                    {
-                        level.Field.cursor.Position = new System.Drawing.Point(level.Field.cursor.Position.X + speed.X, level.Field.cursor.Position.Y + speed.Y);
-                    }
-                    break;
-                case Key.Z:
-                case Key.X:
-                    if (level.Field.CheckEmptyPoint(new System.Drawing.Point(level.Field.cursor.Position.X, level.Field.cursor.Position.Y)))
-                    {
-                        level.Field[level.Field.cursor.Position.X, level.Field.cursor.Position.Y] = keyModels[key];
-                    }
-                    break;
-                case Key.C:
-                    if (level.Field.CheckSlash(new System.Drawing.Point(level.Field.cursor.Position.X, level.Field.cursor.Position.Y)))
-                    {
-                        level.Field[level.Field.cursor.Position.X, level.Field.cursor.Position.Y] = keyModels[key];
-                    }
-                    break;
-                default:
-                    level.Field.cursor.Position = new System.Drawing.Point(level.Field.cursor.Position.X, level.Field.cursor.Position.Y);
-                    break;
-            }
+            MainController.CheckKey(key, level.Field);
         }
 
-        public static Dictionary<Key?, System.Drawing.Point> keySpeed = new Dictionary<Key?, System.Drawing.Point>
-        {
-            { Key.Left, new System.Drawing.Point(-1, 0) },
-            { Key.Right, new System.Drawing.Point(1, 0) },
-            { Key.Up, new System.Drawing.Point(0, -1) },
-            { Key.Down, new System.Drawing.Point(0, 1) },
-        };
-
-        public static Dictionary<Key?, Basic> keyModels = new Dictionary<Key?, Basic>
-        {
-            { Key.Z, new Backslash() },
-            { Key.X, new Slash() },
-            { Key.C, new Empty() }
-        };
-
-        private void OnKeyUp(object sender, KeyEventArgs e)
-        {
-
-        }
+        private void OnKeyUp(object sender, KeyEventArgs e) { }
 
         private void PrepareLevel()
         {
@@ -117,24 +69,19 @@ namespace NewBallGameWPF
                 score.Content = $"Time: {level.LevelData.Seconds - timer.Elapsed.Seconds} Score: {(level.LevelData.MagicBalls - level.Field.MagicBalls) * 5} Balls: {level.Field.MagicBalls}";
                 MyCanvas.Children.Add(score);
                 MyCanvas.Children.Add(control);
+                MyCanvas.Children.Add(exit);
             }
             else
             {
                 if (level.Field.MagicBalls == 0)
-                {
+                {                  
                     MessageBox.Show("You won!");
-                    Close();
-                    gameTimer.Stop();
-                    MainWindow mw = new MainWindow();
-                    mw.Show();
+                    EndGame();
                 }
                 else if (level.Field.MagicBalls > 0)
                 {
                     MessageBox.Show("You lost!");
-                    Close();
-                    gameTimer.Stop();
-                    MainWindow mw = new MainWindow();
-                    mw.Show();
+                    EndGame();
                 }
             }
         }
@@ -155,47 +102,10 @@ namespace NewBallGameWPF
                         Height = 20
                     };
 
-                    if (field[x, y] is Ball)
-                    {
-                        ImageBrush brush = new ImageBrush();
-                        brush.ImageSource = new BitmapImage(new Uri(@"C:\Users\Irina\Desktop\WpfApp1\WpfApp1\bin\Debug\net6.0-windows\images\redball.png", UriKind.Relative));
-                        cell.Fill = brush;
-                    }
-
-                    else if (field[x, y] is Backslash)
-                    {
-                        ImageBrush brush = new ImageBrush();
-                        brush.ImageSource = new BitmapImage(new Uri(@"C:\Users\Irina\Desktop\WpfApp1\WpfApp1\bin\Debug\net6.0-windows\images\backslash.png", UriKind.Relative));
-                        cell.Fill = brush;
-                    }
-
-                    else if (field[x, y] is Slash)
-                    {
-                        ImageBrush brush = new ImageBrush();
-                        brush.ImageSource = new BitmapImage(new Uri(@"C:\Users\Irina\Desktop\WpfApp1\WpfApp1\bin\Debug\net6.0-windows\images\slash.png", UriKind.Relative));
-                        cell.Fill = brush;
-                    }
-
-                    else if (field[x, y] is Brick)
-                    {
-                        ImageBrush brush = new ImageBrush();
-                        brush.ImageSource = new BitmapImage(new Uri(@"C:\Users\Irina\Desktop\WpfApp1\WpfApp1\bin\Debug\net6.0-windows\images\wall.png", UriKind.Relative));
-                        cell.Fill = brush;
-                    }
-
-                    else if (field[x, y] is MagicBall)
-                    {
-                        ImageBrush brush = new ImageBrush();
-                        brush.ImageSource = new BitmapImage(new Uri(@"C:\Users\Irina\Desktop\WpfApp1\WpfApp1\bin\Debug\net6.0-windows\images\magicball.png", UriKind.Relative));
-                        cell.Fill = brush;
-                    }
-
-                    else if (field[x, y] is Empty)
-                    {
-                        ImageBrush brush = new ImageBrush();
-                        brush.ImageSource = new BitmapImage(new Uri(@"C:\Users\Irina\Desktop\WpfApp1\WpfApp1\bin\Debug\net6.0-windows\images\empty.png", UriKind.Relative));
-                        cell.Fill = brush;
-                    }
+                    var typeName = field[x, y].GetType().Name.ToString();
+                    ImageBrush brush = new ImageBrush();
+                    brush.ImageSource = new BitmapImage(new Uri($@"C:\Users\Irina\Desktop\c#\CourseWork\NewBallGame\NewBallGameWPF\bin\Debug\net6.0-windows\images\{typeName}.png", UriKind.Relative));
+                    cell.Fill = brush;
 
                     Canvas.SetLeft(cell, i);
                     Canvas.SetTop(cell, j);
@@ -206,6 +116,19 @@ namespace NewBallGameWPF
                 }
                 j += 20;
             }
+        }
+
+        private void EndGame()
+        {
+            gameTimer.Stop();
+            Close();
+            MainWindow mw = new MainWindow();
+            mw.Show();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            EndGame();
         }
     }
 }

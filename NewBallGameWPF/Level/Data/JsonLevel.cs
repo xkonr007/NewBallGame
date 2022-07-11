@@ -5,7 +5,6 @@ using NewBallGameWPF.Models.Abstract;
 
 namespace NewBallGameWPF.Level.Data
 {
-
     [Serializable]
     public class JsonLevel
     {

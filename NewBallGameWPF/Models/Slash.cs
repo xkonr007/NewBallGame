@@ -4,9 +4,6 @@ namespace NewBallGameWPF.Models
 {
     public class Slash : Basic
     {
-        public Slash(char arrayChar = '/', string imagePath = @"\images\slash.png") : base(arrayChar, imagePath)
-        {
-
-        }
+        public Slash(char arrayChar = '/', string imagePath = @"\images\slash.png") : base(arrayChar, imagePath) { }
     }
 }

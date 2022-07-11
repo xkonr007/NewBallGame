@@ -68,7 +68,6 @@ namespace NewBallGameWPF.Field
                 case Brick:
                     ball.DX = -ball.DX;
                     ball.DY = -ball.DY;
-                    CheckNextPoint();
                     ball.Move(new Point(ball.DX, ball.DY), field);
                     field[ball.Position.X, ball.Position.Y] = ball;
                     break;
@@ -116,6 +115,8 @@ namespace NewBallGameWPF.Field
             var sumSpeed = GetSumSpeed(nextPointmodel, ballSpeed);
             if (CheckBrick(new Point(ball.Position.X + sumSpeed.X, ball.Position.Y + sumSpeed.Y)))
             {
+                ball.DX = -ballSpeed.X;
+                ball.DY = -ballSpeed.Y;
                 ball.Move(new Point(ball.DX, ball.DY), field);
             }
             else
