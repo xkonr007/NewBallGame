@@ -23,7 +23,7 @@ namespace NewBallGameWPF.Controller
             { Key.C, new Empty() }
         };
 
-        public static void CheckKey(Key key,FieldModel field)
+        public static void CheckKey(Key key, FieldModel field)
         {
             switch (key)
             {

@@ -4,6 +4,6 @@ namespace NewBallGameWPF.Models
 {
     public class MagicBall : Basic
     {
-        public MagicBall(char arrayChar = '@', string imagePath = @"\images\magicball.png") : base(arrayChar, imagePath) { }
+        public MagicBall(char arrayChar = '@', string imagePath = @"images\MagicBall.png") : base(arrayChar, imagePath) { }
     }
 }

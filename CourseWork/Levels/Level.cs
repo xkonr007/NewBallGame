@@ -48,7 +48,7 @@ namespace CourseWork.Levels
 
         public static Level GetLevel(int number)
         {
-            var path = @$"..\..\..\Levels\LevelsData\Level{number}.json";
+            var path = @$"LevelsData\Level{number}.json";
             using (var reader = new StreamReader(path))
             {
                 var deserializedLevel = JsonConvert.DeserializeObject<JsonLevel>(reader.ReadToEnd());

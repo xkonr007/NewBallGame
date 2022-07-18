@@ -95,6 +95,11 @@ namespace NewBallGameWPF.Field
             if (nextPointModel is MagicBall)
             {
                 MagicBalls -= 1;
+                
+                //SoundPlayer sp = new SoundPlayer();
+                //sp.SoundLocation = @"D:\Downloads\msg-1536012805-103197.wav";
+                //sp.Load();
+                //sp.Play();
             }
             return nextPointModel is MagicBall || nextPointModel is Empty;
         }

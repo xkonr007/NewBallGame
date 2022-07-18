@@ -16,15 +16,22 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
-        <ComboBox Name ="Level" HorizontalAlignment="Center" IsEditable="True" IsReadOnly="True" HorizontalContentAlignment="Center"  Margin="0,397,0,0" VerticalAlignment="Top" Width="308" RenderTransformOrigin="-0.04,-1.8" FontFamily="Snap ITC" Height="74" Opacity="0.8" Foreground="#FF61A44D"  FontWeight="Bold" FontSize="36" SelectionChanged="Level_SelectionChanged"  Text="Level" Background="Black">
+        <ComboBox Name ="Level" HorizontalAlignment="Center" VerticalContentAlignment="Center" IsEditable="True" IsReadOnly="True" HorizontalContentAlignment="Center"  Margin="0,393,0,0" VerticalAlignment="Top" Width="308" RenderTransformOrigin="-0.04,-1.8" FontFamily="Snap ITC" Height="74" Opacity="0.8" Foreground="#FF61A44D"  FontWeight="Bold" FontSize="36" SelectionChanged="Level_SelectionChanged"  Text="Level">
             <ComboBox.Effect>
                 <DropShadowEffect/>
             </ComboBox.Effect>
+            <Button Content="Level"/>
         </ComboBox>
-        <Button Content="Exit" HorizontalAlignment="Center" Margin="0,500,0,0" VerticalAlignment="Top" Height="74" Width="308" Click="Exit_Button" RenderTransformOrigin="0.505,1.116" FontFamily="Snap ITC" FontSize="36" FontWeight="Bold" FontStyle="Normal" Foreground="#FF61A44D" Background="Black" Opacity="0.8">
+        <Button Content="Exit" HorizontalAlignment="Center" Margin="0,604,0,0" VerticalAlignment="Top" Height="74" Width="308" Click="Exit_Button" RenderTransformOrigin="0.505,1.116" FontFamily="Snap ITC" FontSize="36" FontWeight="Bold" FontStyle="Normal" Foreground="#FF61A44D" Opacity="0.8" Background="White">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
+        <Button Content="Add Music" Name ="MusicButton"  HorizontalAlignment="Center" Margin="0,500,0,0" VerticalAlignment="Top" Height="74" Width="308" Click="AddMusic" RenderTransformOrigin="0.505,1.116" FontFamily="Snap ITC" FontSize="36" FontWeight="Bold" FontStyle="Normal" Foreground="#FF61A44D" Background="Black" Opacity="0.8">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+
     </Grid>
 </Window>

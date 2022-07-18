@@ -5,7 +5,7 @@ namespace NewBallGameWPF.Models
 {
     public class Ball : Basic
     {
-        public Ball(char arrayChar = 'o', string imagePath = @"\images\redball.png") : base(arrayChar, imagePath) { }
+        public Ball(char arrayChar = 'o', string imagePath = @"images\Ball.png") : base(arrayChar, imagePath) { }
         public Point Position { get; set; }
         public int DX { get; set; } = 0;
         public int DY { get; set; } = 1;
@@ -16,6 +16,5 @@ namespace NewBallGameWPF.Models
             Position = new Point(Position.X + speed.X, Position.Y + speed.Y);
             field[toClear.X, toClear.Y] = new Empty();
         }
-
     }
 }

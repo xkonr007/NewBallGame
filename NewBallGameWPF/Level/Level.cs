@@ -48,7 +48,7 @@ namespace NewBallGameWPF.Level
 
         public static Level GetLevel(int number)
         {
-            var path = @$"C:\Users\Irina\Desktop\c#\CourseWork\NewBallGame\NewBallGameWPF\bin\Debug\net6.0-windows\data\Level{number}.json";
+            var path = @$"data\Level{number}.json";
             using (var reader = new StreamReader(path))
             {
                 var deserializedLevel = JsonConvert.DeserializeObject<JsonLevel>(reader.ReadToEnd());

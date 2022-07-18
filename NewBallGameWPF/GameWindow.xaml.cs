@@ -9,6 +9,7 @@ using System.Diagnostics;
 using NewBallGameWPF.Models;
 using NewBallGameWPF.Field;
 using NewBallGameWPF.Controller;
+using System.Media;
 
 namespace NewBallGameWPF
 {
@@ -21,10 +22,11 @@ namespace NewBallGameWPF
         public Level.Level level;
         public Menu menu;
         private int levelId;
+        private SoundPlayer player = new SoundPlayer();
 
         DispatcherTimer gameTimer = new DispatcherTimer();
 
-        public GameWindow(int levelId)
+        public GameWindow(int levelId,bool music)
         {
             InitializeComponent();
             this.levelId = levelId;
@@ -32,6 +34,7 @@ namespace NewBallGameWPF
             gameTimer.Tick += Loop;
             gameTimer.Start();
             MyCanvas.Focus();
+            AddSoundtrack(music);
 
             Play();
         }
@@ -59,31 +62,59 @@ namespace NewBallGameWPF
             timer.Start();
         }
 
+
+        private void PlaySound(string path)
+        {
+            SoundPlayer sp = new SoundPlayer();
+            sp.SoundLocation = path;
+            sp.Load();
+            sp.Play();
+        }
+
+        private void PlayWinSound(bool win)
+        {
+            if (win)
+            {
+                PlaySound(@"Sounds\win.wav");
+            }
+            else
+            {
+                PlaySound(@"Sounds\gameover.wav");
+            }
+        }
+
         private void Loop(object sender, EventArgs e)
         {
             if (level.Field.MagicBalls > 0 && timer.Elapsed.TotalSeconds < level.LevelData.Seconds)
             {
-                level.Field.MoveBall();
-                Print(level.Field, MyCanvas);
-                level.Field.cursor.Draw(level.Field, MyCanvas);
-                score.Content = $"Time: {level.LevelData.Seconds - timer.Elapsed.Seconds} Score: {(level.LevelData.MagicBalls - level.Field.MagicBalls) * 5} Balls: {level.Field.MagicBalls}";
-                MyCanvas.Children.Add(score);
-                MyCanvas.Children.Add(control);
-                MyCanvas.Children.Add(exit);
+                Go();
             }
             else
             {
                 if (level.Field.MagicBalls == 0)
-                {                  
+                {
+                    PlayWinSound(true);
                     MessageBox.Show("You won!");
                     EndGame();
                 }
                 else if (level.Field.MagicBalls > 0)
                 {
+                    PlayWinSound(false);
                     MessageBox.Show("You lost!");
                     EndGame();
                 }
             }
+        }
+
+        private void Go()
+        {
+            level.Field.MoveBall();
+            Print(level.Field, MyCanvas);
+            level.Field.cursor.Draw(level.Field, MyCanvas);
+            score.Content = $"Time: {level.LevelData.Seconds - timer.Elapsed.Seconds} Score: {(level.LevelData.MagicBalls - level.Field.MagicBalls) * 5} Balls: {level.Field.MagicBalls}";
+            MyCanvas.Children.Add(score);
+            MyCanvas.Children.Add(control);
+            MyCanvas.Children.Add(exit);
         }
 
         private void Print(FieldModel field, Canvas myCanvas)
@@ -96,21 +127,7 @@ namespace NewBallGameWPF
                 i = 0;
                 for (int x = 0; x < field.Height; x++)
                 {
-                    System.Windows.Shapes.Rectangle cell = new System.Windows.Shapes.Rectangle()
-                    {
-                        Width = 20,
-                        Height = 20
-                    };
-
-                    var typeName = field[x, y].GetType().Name.ToString();
-                    ImageBrush brush = new ImageBrush();
-                    brush.ImageSource = new BitmapImage(new Uri($@"C:\Users\Irina\Desktop\c#\CourseWork\NewBallGame\NewBallGameWPF\bin\Debug\net6.0-windows\images\{typeName}.png", UriKind.Relative));
-                    cell.Fill = brush;
-
-                    Canvas.SetLeft(cell, i);
-                    Canvas.SetTop(cell, j);
-
-                    myCanvas.Children.Add(cell);
+                    field[x, y].Draw(myCanvas, field, x, y, i, j);
 
                     i += 20;
                 }
@@ -128,7 +145,22 @@ namespace NewBallGameWPF
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            player.Stop();
             EndGame();
+        }
+
+        private void AddSoundtrack(bool music)
+        {
+            if (music)
+            {
+                player.SoundLocation = @"Sounds\soundtrack.wav";
+                player.Load();
+                player.Play();
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }
