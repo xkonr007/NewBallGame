@@ -1,0 +1,17 @@
+﻿<Window x:Class="NewBallGameWPF.GameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NewBallGameWPF"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="GameWindow" Height="750" Width="1000">
+    <Canvas Name ="MyCanvas" Focusable="True" Background="Black" KeyDown="OnKeyDown" KeyUp="OnKeyUp">
+        <Label Name ="control" Foreground="White" Content="Use Z to add Bakslash&#xD;&#xA;Use X to add Slash&#xD;&#xA;Use C to clear" FontSize="20" FontWeight="ExtraBold" Height="90" Width="327" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Brown" Canvas.Top="94" Canvas.Left="673" RenderTransformOrigin="0.489,0.599"/>
+        <Label Name="score" Height="94" Width="327" Foreground="White" Content="Score:&#xD;&#xA;Time:&#xD;&#xA;Balls:" FontSize="20" Background="Chocolate" FontWeight="ExtraBold" Canvas.Left="673" HorizontalAlignment="Center" VerticalAlignment="Top" />
+        <Button x:Name="exit"  Canvas.Left="673" Foreground="White" Canvas.Top="184" Height="84" Width="327" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Click="Button_Click" FontWeight="ExtraBold" Background="#FF531212">
+            <Button Content="Exit" Foreground="White" Background="#FF531212"/>
+        </Button>
+    </Canvas>
+</Window>
